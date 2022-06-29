@@ -44,7 +44,7 @@ function _hydro_postexec --on-event fish_postexec
     test $mins -gt 0 && set --local --append out $mins"m"
     test $secs -gt 0 && set --local --append out $secs"s"
 
-    set --global _hydro_cmd_duration "$out "
+    set --global _hydro_cmd_duration " [$out]"
 end
 
 function _hydro_prompt --on-event fish_prompt
@@ -54,7 +54,7 @@ function _hydro_prompt --on-event fish_prompt
 
     for code in $last_status
         if test $code -ne 0
-            set _hydro_prompt "$_hydro_newline$_hydro_color_error"[(echo $last_status)]
+            set _hydro_prompt "$_hydro_newline$_hydro_color_error"[(echo $last_status)]" $_hydro_color_prompt$hydro_symbol_prompt"
             break
         end
     end
@@ -91,7 +91,7 @@ function _hydro_prompt --on-event fish_prompt
                     set upstream \" $hydro_symbol_git_ahead\$ahead $hydro_symbol_git_behind\$behind\"
             end
 
-            set --universal $_hydro_git \"\$branch\$info\$upstream \"
+            set --universal $_hydro_git \"\$branch\$info\$upstream\"
 
             test \$fetch = true && command git fetch --no-tags 2>/dev/null
         end
@@ -127,6 +127,7 @@ function hydro_multiline --on-variable hydro_multiline
     end
 end && hydro_multiline
 
+set --query hydro_color_prompt || set --global hydro_color_prompt $fish_color_normal
 set --query hydro_color_error || set --global hydro_color_error $fish_color_error
 set --query hydro_symbol_prompt || set --global hydro_symbol_prompt ❱
 set --query hydro_symbol_git_dirty || set --global hydro_symbol_git_dirty •
